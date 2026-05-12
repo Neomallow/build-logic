@@ -2,7 +2,7 @@
 ## Instructions
 Each instruction is 16 bits wide. The PC (Program Counter) is 12 bits wide. There are 16 registers where each is 16 bits wide. However, for many instructions, only the lower 8 bits of registers can be used, such as for ALU instructions, as the ALU is only 8 bits wide.
 
-For every ALU instruction, the carry (CF) and zero (ZF) flags are automatically set to the corresponding value. The carry flag will always feed into ADD (A + B + CF) and SUB (A - B - CF). The zero flag does not have any impact on the ALU.
+After every ALU instruction, the carry (CF) and zero (ZF) flags are automatically set to the corresponding value (carry out = CF, result zero = ZF). The carry flag will always feed into ADD (A + B + CF) and SUB (A - B - CF). The zero flag does not have any impact on the ALU.
 <table>
     <tr>
         <th>Opcode [decimal equivalent]</th>

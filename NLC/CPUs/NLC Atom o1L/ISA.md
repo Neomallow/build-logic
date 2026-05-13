@@ -1,4 +1,4 @@
-# Junior 11ES
+# Atom o1L
 ## Instructions
 Instructions are formatted in [ OPCODE [8] | OPERAND [8] | OPERAND [16] | OPERAND [16] | OPERAND [16] ]
 <table>

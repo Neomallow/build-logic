@@ -85,4 +85,13 @@ LOAD
       <td>RAM [16]</td>
       <td>Moves the value in R1 into the <i>byte</i>-addressed + <i>byte</i> offset RAM.</td>
     </tr>
+    <tr>
+      <td>00000111 [7]</td>
+      <td>JMP</td>
+      <td>-</td>
+      <td>ADDR [5]</td>
+      <td>ADDR [16]</td>
+      <td>-</td>
+      <td>Sets the program counter to ADDR unconditionally.</td>
+    </tr>
 </table>

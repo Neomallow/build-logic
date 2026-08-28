@@ -1,6 +1,6 @@
 # Atom o1L
 Please note this is an asynchronous CPU. Instead of a set clock cycle the CPU uses a handshaking protocol to move on to the next instruction as soon as the previous one is finished. This makes a NOP operation useless and sometimes even dangerous.
-There is a hardware timer which you can change to a specific interval with the minimum being 0.05s and the maximum 300s. The default is 0.5s.
+There is a hardware timer which you can change to a specific interval with the minimum being 0.05s and the maximum 300s in 0.05s intervals. The default is 0.5s.
 
 ## Registers
 There are 65536 registers in total, each being 64 bits wide. If a value were to exceed 64 bits, everything exceeding the 64 bits would be lost.

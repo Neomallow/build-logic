@@ -7,10 +7,24 @@ NF prohibits an instruction from updating the flags register.
 Example:
 ```asm
 ADD 0x05, 0x06
-NF ADD 0x01, 0xFF  
+NF ADD 0x01, 255
 ADC 0x02, 0x01
 ```
 Here, assuming `ADD 0x01, 0xFF` sets CF=1, `ADC 0x02, 0x01` would not behave as intended if you need to preserve carry from a previous instruction like `ADD 0x05, 0x06`.
+
+## R
+### REPx
+REPx repeats an instruction until the condition x is false. The condition can either be a number or a flag.  
+Example:
+```asm
+REP5 ADD 0x01, 16113
+```
+This will repeat `ADD 0x01, 16113` 5 times.
+```asm
+CMP 0x05, 103
+REPNZ SUB 0x05, 1
+```
+This will repeat `SUB 0x05, 1` until `CMP 0x05, 103` is zero.
 
 # INSTRUCTIONS
 ## A

@@ -2,7 +2,7 @@
 A prefix is used to easily modify an instruction's behavior. You can only use **one** prefix per instruction.
 
 ## N
-### NF
+### NF - No Flag Update
 0x01  
 NF prohibits an instruction from updating the flags register.  
 Example:
@@ -13,20 +13,31 @@ ADC 0x02, 0x01
 ```
 Here, assuming `ADD 0x01, 0xFF` sets CF=1, `ADC 0x02, 0x01` would not behave as intended if you need to preserve carry from a previous instruction like `ADD 0x05, 0x06`.
 
-## R
-### REPx
+### NH - No High Update
 0x02  
-REPx repeats an instruction until the condition x is false. The condition can either be a number or a flag.  
+NH prohibits an instruction like MUL or DIV from updating the dedicated register at 0xFF.  
 Example:
 ```asm
-REP5 ADD 0x01, 16113
+MUL 0x05, 65535
+NH MUL 0x04, 0x03
 ```
-This will repeat `ADD 0x01, 16113` 5 times.
+This will preserve the high 64 bits of `MUL 0x05, 65535` in register 0xFF.
+
+## R
+### REPx - Repeat
+0x03  
+REPx repeats an instruction until the condition x is false, where x is a flag in the flag register.  
+Example:
 ```asm
 CMP 0x05, 103
 REPNZ SUB 0x05, 1
 ```
-This will repeat both `CMP 0x05, 103` and `SUB 0x05, 1` until `CMP 0x05, 103` the zero flag is set.
+This will repeat both `CMP 0x05, 103` and `SUB 0x05, 1` until `CMP 0x05, 103` is zero.  
+1. Execute `CMP 0x05, 103`.
+2. Update flags.
+3. Execute `SUB 0x05, 1` if NZ==1, jump past if not.
+4. Update flags.
+5. Repeat.
 
 # INSTRUCTIONS
 All immediates are **unsigned**. If you want to do signed math, you will have to do it manually.
@@ -59,11 +70,13 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 ### DIV - Divide
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
 | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| 0x0410 | DIV r₁, r₂ | Divide r₂ by r₁. | r₁ | r₂
+| 0x0410 | DIV r₁, r₂ | Divide r₁ by r₂ . | r₁ | r₂
 | 0x0411 | DIV r, imm64 | Divide r by imm64. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
 | 0x0412 | DIV r, imm32 | Divide r by imm32. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0413 | DIV r, imm16 | Divide r by imm16. | r | imm16₁ | imm16₂
 | 0x0414 | DIV r, imm8 | Divide r by imm8. | r | imm8
+
+The remainder of the result will be stored in dedicated register at 0xFF.
 
 ## J
 ### JMP - Jump
@@ -90,10 +103,12 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
 | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
 | 0x0400 | MUL r₁, r₂ | Multiply r₂ with r₁ and store in r₁. | r₁ | r₂
-| 0x0401 | MUL r, imm64 | Multiply imm64 with r and store in r₁. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
-| 0x0402 | MUL r, imm32 | Multiply imm32 with r and store in r₁. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
-| 0x0403 | MUL r, imm16 | Multiply imm16 with r and store in r₁. | r | imm16₁ | imm16₂
-| 0x0404 | MUL r, imm8 | Multiply imm8 with r and store in r₁. | r | imm8
+| 0x0401 | MUL r, imm64 | Multiply imm64 with r and store in r. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
+| 0x0402 | MUL r, imm32 | Multiply imm32 with r and store in r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
+| 0x0403 | MUL r, imm16 | Multiply imm16 with r and store in r. | r | imm16₁ | imm16₂
+| 0x0404 | MUL r, imm8 | Multiply imm8 with r and store in r. | r | imm8
+
+The higher 64 bits of the result will be stored in the dedicated register at 0xFF.
 
 ## N
 ### NOP - No Operation

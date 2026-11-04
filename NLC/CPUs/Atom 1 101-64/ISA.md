@@ -3,6 +3,7 @@ A prefix is used to easily modify an instruction's behavior. You can only use **
 
 ## N
 ### NF
+0x01  
 NF prohibits an instruction from updating the flags register.  
 Example:
 ```asm
@@ -14,6 +15,7 @@ Here, assuming `ADD 0x01, 0xFF` sets CF=1, `ADC 0x02, 0x01` would not behave as 
 
 ## R
 ### REPx
+0x02  
 REPx repeats an instruction until the condition x is false. The condition can either be a number or a flag.  
 Example:
 ```asm
@@ -24,9 +26,16 @@ This will repeat `ADD 0x01, 16113` 5 times.
 CMP 0x05, 103
 REPNZ SUB 0x05, 1
 ```
-This will repeat `SUB 0x05, 1` until `CMP 0x05, 103` is zero.
+This will repeat both `CMP 0x05, 103` and `SUB 0x05, 1` until `CMP 0x05, 103` the zero flag is set.
 
 # INSTRUCTIONS
+All immediates are **unsigned**. If you want to do signed math, you will have to do it manually.
+
+## FORMAT
+| Prefix | Opcode | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| 95:88 | 87:72 | 71:64 | 63:56 | 55:48 | 47:40 | 39:32 | 31:24 | 23:16 | 15:8 | 7:0 
+
 ## A
 ### ADC - Add With Carry
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
@@ -45,6 +54,16 @@ This will repeat `SUB 0x05, 1` until `CMP 0x05, 103` is zero.
 | 0x0102 | ADD r, imm32 | Add imm32 to r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0103 | ADD r, imm16 | Add imm16 to r. | r | imm16₁ | imm16₂
 | 0x0104 | ADD r, imm8 | Add imm8 to r. | r | imm8
+
+## D
+### DIV - Divide
+| Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| 0x0410 | DIV r₁, r₂ | Divide r₂ by r₁. | r₁ | r₂
+| 0x0411 | DIV r, imm64 | Divide r by imm64. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
+| 0x0412 | DIV r, imm32 | Divide r by imm32. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
+| 0x0413 | DIV r, imm16 | Divide r by imm16. | r | imm16₁ | imm16₂
+| 0x0414 | DIV r, imm8 | Divide r by imm8. | r | imm8
 
 ## J
 ### JMP - Jump
@@ -66,6 +85,15 @@ This will repeat `SUB 0x05, 1` until `CMP 0x05, 103` is zero.
 | 0x0202 | MOV r, imm32 | Move imm32 to r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0203 | MOV r, imm16 | Move imm16 to r. | r | imm16₁ | imm16₂
 | 0x0204 | MOV r, imm8 | Move imm8 to r. | r | imm8
+
+### MUL - Multiply
+| Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| 0x0400 | MUL r₁, r₂ | Multiply r₂ with r₁ and store in r₁. | r₁ | r₂
+| 0x0401 | MUL r, imm64 | Multiply imm64 with r and store in r₁. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
+| 0x0402 | MUL r, imm32 | Multiply imm32 with r and store in r₁. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
+| 0x0403 | MUL r, imm16 | Multiply imm16 with r and store in r₁. | r | imm16₁ | imm16₂
+| 0x0404 | MUL r, imm8 | Multiply imm8 with r and store in r₁. | r | imm8
 
 ## N
 ### NOP - No Operation

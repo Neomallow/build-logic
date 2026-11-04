@@ -1,9 +1,20 @@
+# REGISTERS
+There are 256 general purpose registers from 0x00 to 0xFF, where 0xFF is the dedicated high ALU output register.
+Separately, there is a flag register, a program counter and a call stack.
+
+## FLAGS
+- Carry CF - 0x00
+- Borrow BF - 0x01
+- Zero ZF - 0x02
+- Overflow OF - 0x03
+- 
+
 # PREFIXES
 A prefix is used to easily modify an instruction's behavior. You can only use **one** prefix per instruction.
 
 ## N
 ### NF - No Flag Update
-0x01  
+0x00  
 NF prohibits an instruction from updating the flags register.  
 Example:
 ```asm
@@ -14,7 +25,7 @@ ADC 0x02, 0x01
 Here, assuming `ADD 0x01, 0xFF` sets CF=1, `ADC 0x02, 0x01` would not behave as intended if you need to preserve carry from a previous instruction like `ADD 0x05, 0x06`.
 
 ### NH - No High Update
-0x02  
+0x01  
 NH prohibits an instruction like MUL or DIV from updating the dedicated register at 0xFF.  
 Example:
 ```asm
@@ -24,9 +35,9 @@ NH MUL 0x04, 0x03
 This will preserve the high 64 bits of `MUL 0x05, 65535` in register 0xFF.
 
 ## R
-### REPx - Repeat
-0x03  
-REPx repeats an instruction until the condition x is false, where x is a flag in the flag register.  
+### REPc - Repeat
+0x1c  
+REPx repeats an instruction until the condition c is false, where c is a flag in the flag register.  
 Example:
 ```asm
 CMP 0x05, 103

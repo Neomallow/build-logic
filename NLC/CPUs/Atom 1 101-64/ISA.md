@@ -7,7 +7,8 @@ Separately, there is a flag register, a program counter and a call stack.
 - Borrow BF - 0x01
 - Zero ZF - 0x02
 - Overflow OF - 0x03
-- 
+- Parity PF - 0x04
+- Sign SF - 0x05
 
 # PREFIXES
 A prefix is used to easily modify an instruction's behavior. You can only use **one** prefix per instruction.
@@ -81,13 +82,160 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 ### DIV - Divide
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
 | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| 0x0410 | DIV r₁, r₂ | Divide r₁ by r₂ . | r₁ | r₂
+| 0x0410 | DIV r₁, r₂ | Divide r₁ by r₂. | r₁ | r₂
 | 0x0411 | DIV r, imm64 | Divide r by imm64. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
 | 0x0412 | DIV r, imm32 | Divide r by imm32. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0413 | DIV r, imm16 | Divide r by imm16. | r | imm16₁ | imm16₂
 | 0x0414 | DIV r, imm8 | Divide r by imm8. | r | imm8
 
 The remainder of the result will be stored in dedicated register at 0xFF.
+
+### DRC - Draw Character
+| Opcode | Instruction | Description | Operand 1 | Operand 2 
+| ----------- | ----------- | ----------- | ----------- | ----------- 
+| 0x0500 | DRC r₁, r₂ | Draw character r₁ at screen position r₂. | r₁ | r₂
+| 0x0501 | DRC r, imm16 | Draw character r at screen position imm16. | r | imm16₁ | imm16₂
+| 0x0502 | DRC imm8, r | Draw character imm8 at screen position r. | imm8 | r
+| 0x0503 | DRC imm8, imm16 | Draw character imm8 at screen position imm16. | imm8 | imm16₁ | imm16₂
+
+#### Character Encoding
+The lower 7 bits of the register or immediate are used.
+
+0000000 =   
+0000001 = a  
+0000010 = b  
+0000011 = c  
+0000100 = d  
+0000101 = e  
+0000110 = f  
+0000111 = g  
+0001000 = h  
+0001001 = i  
+0001010 = j  
+0001011 = k  
+0001100 = l  
+0001101 = m  
+0001110 = n  
+0001111 = o  
+0010000 = p  
+0010001 = q  
+0010010 = r  
+0010011 = s  
+0010100 = t  
+0010101 = u  
+0010110 = v  
+0010111 = w  
+0011000 = x  
+0011001 = y  
+0011010 = z  
+0011011 = 1  
+0011100 = 2  
+0011101 = 3  
+0011110 = 4  
+0011111 = 5  
+
+0100000 = 6  
+0100001 = 7  
+0100010 = 8  
+0100011 = 9  
+0100100 = 0  
+0100101 = -  
+0100110 = =  
+0100111 = .  
+0101000 = ,  
+0101001 = ;  
+0101010 = /  
+0101011 = à  
+0101100 = â  
+0101101 = ç  
+0101110 = è  
+0101111 = é   
+0110000 = ê    
+0110001 = î  
+0110010 = ï  
+0110011 = û  
+0110100 = |  
+0110101 = \[  
+0110110 = ]  
+0110111 = "  
+0111000 = 🟧  
+0111001 = 🟨  
+0111010 = 🟩  
+0111011 = 🟦  
+0111100 = 🟪  
+0111101 = ⬜  
+0111110 = ▶  
+0111111 =   
+
+1000000 =   
+1000001 = A   
+1000010 = B   
+1000011 = C  
+1000100 = D  
+1000101 = E  
+1000110 = F  
+1000111 = G  
+1001000 = H  
+1001001 = I  
+1001010 = J  
+1001011 = K  
+1001100 = L  
+1001101 = M  
+1001110 = N  
+1001111 = O  
+1010000 = P  
+1010001 = Q  
+1010010 = R  
+1010011 = S  
+1010100 = T  
+1010101 = U  
+1010110 = V  
+1010111 = W  
+1011000 = X  
+1011001 = Y  
+1011010 = Z  
+1011011 = !  
+1011100 = @  
+1011101 = #  
+1011110 = $  
+1011111 = %  
+
+1100000 = ?  
+1100001 = &  
+1100010 = *  
+1100011 = (  
+1100100 = )  
+1100101 = _  
+1100110 = +  
+1100111 = .  
+1101000 = '  
+1101001 = :  
+1101010 = ~  
+1101011 = À  
+1101100 = Â  
+1101101 = Ç  
+1101110 = È  
+1101111 = É  
+1110000 = Ê  
+1110001 = Ì  
+1110010 = Ï  
+1110011 = Û  
+1110100 = ¦  
+1110101 = {  
+1110110 = }  
+1110111 = ^  
+1111000 = >   
+1111001 = <  
+1111010 = █  
+1111011 = ➡  
+1111100 = ⬅  
+1111101 = ⬆  
+1111110 = ⬇  
+1111111 =  
+
+#### Screen Coordinates
+0-6: x  
+8-15: y
 
 ## J
 ### JMP - Jump

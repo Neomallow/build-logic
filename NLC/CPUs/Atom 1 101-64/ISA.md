@@ -297,7 +297,19 @@ The higher 64 bits of the result will be stored in the dedicated register at 0xF
 | 0x0114 | SUB r, imm8 | Subtract imm8 from r. | r | imm8
 
 ### SYSCALL - System Call
+OPCODE: 0x01
 | Operand 1 (type) | Encoding | Description | Return (R0) | R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7
 | - | - | - | - | - | - | - | - | - | - | - | - |
 | PRINT | 0x00 | Print string from RAM | - | RAM address pointer | (Length in bytes)
-| OPENWINDOW | 0x01 | Open new window | - | Height in pixels | Width in pixels | Title pointer (string in RAM)
+| OPENWINDOW | 0x01 | Open new window | - | Height in pixels | Width in pixels | Title pointer (string in RAM) | (Title string length)
+
+Examples:  
+OPENWINDOW
+```asm
+; open 64x128 window with title 'OS':
+MOV R0, 128      ; height
+MOV R1, 64       ; width
+MOV R2, 0xFF18   ; points to 'OS' string
+MOV R3, 2        ; 2 byte long string ('O' and 'S')
+SYSCALL 1        ; alternatively 'SYSCALL OPENWINDOW'
+```

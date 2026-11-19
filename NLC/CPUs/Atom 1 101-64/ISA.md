@@ -295,3 +295,9 @@ The higher 64 bits of the result will be stored in the dedicated register at 0xF
 | 0x0112 | SUB r, imm32 | Subtract imm32 from r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0113 | SUB r, imm16 | Subtract imm16 from r. | r | imm16₁ | imm16₂
 | 0x0114 | SUB r, imm8 | Subtract imm8 from r. | r | imm8
+
+### SYSCALL - System Call
+| Operand 1 (type) | Encoding | Description | Return (R0) | R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7
+| - | - | - | - | - | - | - | - | - | - | - | - |
+| PRINT | 0x00 | Print string from RAM | - | RAM address pointer | (Length in bytes)
+| OPENWINDOW | 0x01 | Open new window | - | Height in pixels | Width in pixels | Title pointer (string in RAM)

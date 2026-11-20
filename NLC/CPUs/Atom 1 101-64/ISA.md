@@ -276,6 +276,25 @@ this too
 | 0x0304 | JMP imm8 | Jump relative short direct to program counter address += signed imm8. | imm8
 | 0x0305 | JMP imm16 | Jump relative far direct to program counter address += signed imm16. | imm16₁ | imm16₂
 
+## L
+### LOAD - Load From RAM
+| Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| 0x0600 | LOAD \[r₁], r₂ | Load first 8 bytes from \[r₁] into r₂. | r₁ | r₂
+| 0x0601 | LOAD \[imm32], r | Load first 8 bytes from \[imm32] into r. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | r
+| 0x0602 | LOAD \[imm16], r | Load first 8 bytes from \[imm16] into r. | imm16₁ | imm16₂ | r
+| 0x0603 | LOAD \[imm8], r | Load first 8 bytes from \[imm8] into r. | imm8 | r
+| 0x0610 | LOAD \[r₁], r₂, r₃ | Load first r₂ bytes from \[r₁] into r₃. | r₁ | r₂ | r₃
+| 0x0611 | LOAD \[imm32], r₁, r₂ | Load first r₁ bytes from \[imm32] into r₂. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | r₁ | r₂
+| 0x0612 | LOAD \[imm16], r₁, r₂ | Load first r₁ bytes from \[imm16] into r₂. | imm16₁ | imm16₂ | r₁ | r₂ | 
+| 0x0613 | LOAD \[imm8], r₁, r₂ | Load first r₁ bytes from \[imm8] into r₂. | imm8 | r₁ | r₂ |
+| 0x0620 | LOAD \[r₁], imm8, r₂ | Load first imm8 bytes from \[r₁] into r₂. | r₁ | imm8 | r₂
+| 0x0621 | LOAD \[imm32], imm8, r | Load first imm8 bytes from \[imm32] into r. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | imm8 | r 
+| 0x0622 | LOAD \[imm16], imm8, r | Load first imm8 bytes from \[imm16] into r. | imm16₁ | imm16₂ | imm8 | r
+| 0x0623 | LOAD \[imm8₁], imm8₂, r | Load first imm8₂ bytes from \[imm8₁] into r. | imm8₁ | imm8₂ | r
+
+If fewer than 8 bytes are loaded into a register, it will zero-extend. You can only load up to 8 bytes into one register.
+
 ## M
 ### MOV - Move
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
@@ -314,24 +333,6 @@ The higher 64 bits of the result will be stored in the dedicated register at 0xF
 | 0x0117 | SBB r, imm32 | Subtract with borrow imm32 from r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
 | 0x0118 | SBB r, imm16 | Subtract with borrow imm16 from r. | r | imm16₁ | imm16₂
 | 0x0119 | SBB r, imm8 | Subtract with borrow imm8 from r. | r | imm8
-
-### LOAD - Load From RAM
-| Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
-| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| 0x0600 | LOAD \[r₁], r₂ | Load first 8 bytes from \[r₁] into r₂. | r₁ | r₂
-| 0x0601 | LOAD \[imm32], r | Load first 8 bytes from \[imm32] into r. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | r 
-| 0x0602 | LOAD \[imm16], r | Load first 8 bytes from \[imm16] into r. | imm16₁ | imm16₂ | r
-| 0x0603 | LOAD \[imm8], r | Load first 8 bytes from \[imm8] into r. | imm8 | r
-| 0x0610 | LOAD \[r₁], r₂, r₃ | Load first r₂ bytes from \[r₁] into r₃. | r₁ | r₂ | r₃
-| 0x0611 | LOAD \[imm32], r₁, r₂ | Load first r₁ bytes from \[imm32] into r₂. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | r₁ | r₂
-| 0x0612 | LOAD \[imm16], r₁, r₂ | Load first r₁ bytes from \[imm16] into r₂. | imm16₁ | imm16₂ | r₁ | r₂ | 
-| 0x0613 | LOAD \[imm8], r₁, r₂ | Load first r₁ bytes from \[imm8] into r₂. | imm8 | r₁ | r₂ |
-| 0x0620 | LOAD \[r₁], imm8, r₂ | Load first imm8 bytes from \[r₁] into r₂. | r₁ | imm8 | r₂
-| 0x0621 | LOAD \[imm32], imm8, r | Load first imm8 bytes from \[imm32] into r. | imm32₁ | imm32₂ | imm32₃ | imm32₄ | imm8 | r 
-| 0x0622 | LOAD \[imm16], imm8, r | Load first imm8 bytes from \[imm16] into r. | imm16₁ | imm16₂ | imm8 | r
-| 0x0623 | LOAD \[imm8₁], imm8₂, r | Load first imm8₂ bytes from \[imm8₁] into r. | imm8₁ | imm8₂ | r
-
-If fewer than 8 bytes are loaded into a register, it will zero-extend. You can only load up to 8 bytes into one register.
 
 ### SUB - Subtract
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9

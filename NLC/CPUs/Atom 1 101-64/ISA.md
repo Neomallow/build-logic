@@ -59,6 +59,8 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
 | 95:88 | 87:72 | 71:64 | 63:56 | 55:48 | 47:40 | 39:32 | 31:24 | 23:16 | 15:8 | 7:0 
 
+The length is variable.
+
 ## A
 ### ADC - Add With Carry
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
@@ -78,6 +80,18 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 | 0x0103 | ADD r, imm16 | Add imm16 to r. | r | imm16₁ | imm16₂
 | 0x0104 | ADD r, imm8 | Add imm8 to r. | r | imm8
 
+### CMP - Compare
+| Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| 0x0500 | CMP r₁, r₂ | Compare r₂ and r₁. | r₁ | r₂
+| 0x0501 | CMP r, imm64 | Compare imm64 and r. | r | imm64₁ | imm64₂ | imm64₃ | imm64₄ | imm64₅ | imm64₆ | imm64₇ | imm64₈
+| 0x0502 | CMP r, imm32 | Compare imm32 and r. | r | imm32₁ | imm32₂ | imm32₃ | imm32₄
+| 0x0503 | CMP r, imm16 | Compare imm16 and r. | r | imm16₁ | imm16₂
+| 0x0504 | CMP r, imm8 | Compare imm8 and r. | r | imm8
+
+#### Flag behavior:
+ZF == 1 when both inputs are equal; otherwise ZF == 0.
+
 ## D
 ### DIV - Divide
 | Opcode | Instruction | Description | Operand 1 | Operand 2 | Operand 3 | Operand 4 | Operand 5 | Operand 6 | Operand 7 | Operand 8 | Operand 9
@@ -90,15 +104,8 @@ All immediates are **unsigned**. If you want to do signed math, you will have to
 
 The remainder of the result will be stored in dedicated register at 0xFF.
 
-### DRC - Draw Character
-| Opcode | Instruction | Description | Operand 1 | Operand 2 
-| ----------- | ----------- | ----------- | ----------- | ----------- 
-| 0x0500 | DRC r₁, r₂ | Draw character r₁ at screen position r₂. | r₁ | r₂
-| 0x0501 | DRC r, imm16 | Draw character r at screen position imm16. | r | imm16₁ | imm16₂
-| 0x0502 | DRC imm8, r | Draw character imm8 at screen position r. | imm8 | r
-| 0x0503 | DRC imm8, imm16 | Draw character imm8 at screen position imm16. | imm8 | imm16₁ | imm16₂
-
-#### Character Encoding
+ignore this its temporary
+### Character Encoding
 The lower 7 bits of the register or immediate are used.
 
 0000000 =   
@@ -233,11 +240,32 @@ The lower 7 bits of the register or immediate are used.
 1111110 = ⬇  
 1111111 =  
 
-#### Screen Coordinates
+this too
+### Screen Coordinates
 0-6: x  
 8-15: y
 
 ## J
+### JA - Jump If Above
+| Opcode | Instruction | Description | Operand 1 | Operand 2
+| ----------- | ----------- | ----------- | ----------- | -----------
+| 0x0320 | JA r | Jump indirect to program counter address r if last CMP A>B. | r
+| 0x0321 | JA imm8 | Jump short direct to program counter address imm8 if last CMP A>B. | imm8
+| 0x0322 | JA imm16 | Jump far direct to program counter address imm16 if last CMP A>B. | imm16₁ | imm16₂
+| 0x0320 | JA r | Jump relative indirect to program counter address += signed r if last CMP A>B. | r
+| 0x0321 | JA imm8 | Jump relative short direct to program counter address += signed imm8 if last CMP A>B. | imm8
+| 0x0322 | JA imm16 | Jump relative far direct to program counter address += signed imm16 if last CMP A>B. | imm16₁ | imm16₂
+
+### JB - Jump If Below
+| Opcode | Instruction | Description | Operand 1 | Operand 2
+| ----------- | ----------- | ----------- | ----------- | -----------
+| 0x0340 | JA r | Jump indirect to program counter address r if last CMP A<B. | r
+| 0x0341 | JA imm8 | Jump short direct to program counter address imm8 if last CMP A<B. | imm8
+| 0x0342 | JA imm16 | Jump far direct to program counter address imm16 if last CMP A<B. | imm16₁ | imm16₂
+| 0x0340 | JA r | Jump relative indirect to program counter address += signed r if last CMP A<B. | r
+| 0x0341 | JA imm8 | Jump relative short direct to program counter address += signed imm8 if last CMP A<B. | imm8
+| 0x0342 | JA imm16 | Jump relative far direct to program counter address += signed imm16 if last CMP A<B. | imm16₁ | imm16₂
+
 ### JMP - Jump
 | Opcode | Instruction | Description | Operand 1 | Operand 2
 | ----------- | ----------- | ----------- | ----------- | -----------
@@ -297,13 +325,36 @@ The higher 64 bits of the result will be stored in the dedicated register at 0xF
 | 0x0114 | SUB r, imm8 | Subtract imm8 from r. | r | imm8
 
 ### SYSCALL - System Call
-OPCODE: 0x01
-| Operand 1 (type) | Encoding | Description | Return (R0) | R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7
-| - | - | - | - | - | - | - | - | - | - | - | - |
-| PRINT | 0x00 | Print string from RAM | - | RAM address pointer | (Length in bytes)
-| OPENWINDOW | 0x01 | Open new window | - | Height in pixels | Width in pixels | Title pointer (string in RAM) | (Title string length)
+| Type | Opcode | Description | R0 | R1 | R2 | R3 | R4 | R5 | R6 | R7
+| - | - | - | - | - | - | - | - | - | - | - |
+| PRINT | 0xF000 | Print string from RAM | RAM address pointer | (Length in bytes)
+| OPENWINDOW | 0xF001 | Open new window | Height in pixels | Width in pixels | Title pointer (string in RAM) | (Title string length)
+| CLOSEWINDOW | 0xF002 | Close existing window | Window ID
+
+| Type | R0 return code | Meaning
+| - | - | - |
+| PRINT | 0 | Success
+| PRINT | 1 | Error
+| OPENWINDOW | 0-255 | Window ID
+| OPENWINDOW | 256 | ID Overflow
+| OPENWINDOW | 257 | Out of memory
+| OPENWINDOW | 258 | Permission denied
+| CLOSEWINDOW | 0 | Success
+| CLOSEWINDOW | 1 | Window doesn't exist
+| CLOSEWINDOW | 2 | Permission denied
 
 Examples:  
+PRINT  
+``` asm
+; print 'Hello World!':
+MOV R0, 0xFF18   ; points to 'Hello World!' string
+MOV R1, 12       ; 12 byte long string ('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!')
+SYSCALL 1        ; PRINT
+
+CMP R0, 0
+JNZ .error
+```
+
 OPENWINDOW
 ```asm
 ; open 64x128 window with title 'OS':
@@ -311,5 +362,18 @@ MOV R0, 128      ; height
 MOV R1, 64       ; width
 MOV R2, 0xFF18   ; points to 'OS' string
 MOV R3, 2        ; 2 byte long string ('O' and 'S')
-SYSCALL 1        ; alternatively 'SYSCALL OPENWINDOW'
+SYSCALL 1        ; OPENWINDOW
+
+CMP R0, 255
+JA .error
+```
+
+CLOSEWINDOW
+```asm
+; close window 8:
+MOV R0, 8        ; ID 8
+SYSCALL 2        ; CLOSEWINDOW
+
+CMP R0, 0
+JNZ .error
 ```
